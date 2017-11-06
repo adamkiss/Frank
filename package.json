@@ -12,6 +12,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@taskr/sass": "~1.1.0",
     "cac": "~4.2.4",
     "taskr": "~1.1.0"
   },
