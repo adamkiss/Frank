@@ -1,5 +1,5 @@
 {
-  "name": "Frank",
+  "name": "frank",
   "description": "Static Site Generator that prefers to live globally",
   "website": "https://github.com/adamkiss/Frank",
   "version": "0.0.2",
@@ -12,7 +12,8 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "cac": "~4.2.4"
+    "cac": "~4.2.4",
+    "taskr": "~1.1.0"
   },
   "xo": {
     "semicolon": false
