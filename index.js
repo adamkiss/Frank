@@ -1,4 +1,5 @@
 const Taskr = require('taskr')
+const node_modules_include = require('path').join(__dirname, 'node_modules')
 
 const hello = function (task, utils) {
 	task.plugin('hello', {}, function * (file, opts) {
@@ -28,7 +29,12 @@ function frank(cwd){
 				task
 					.source('sass/halo.sass')
 					.hello()
-					.sass()
+					.sass({
+						sourceMapEmbed: true,
+						// importer: function(url, prev, done){
+						// 	console.log(url, prev, done)
+						// }
+					})
 					.hallo()
 					.target('./dist')
 			}
