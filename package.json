@@ -2,15 +2,17 @@
   "name": "Frank",
   "description": "Static Site Generator that prefers to live globally",
   "website": "https://github.com/adamkiss/Frank",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Adam Kiss",
   "repository": "adamkiss/Frank",
-  "main": "lib",
-  "bin": { "frank" : "./cli.js" },
+  "main": "index.js",
+  "bin": {
+    "frank": "./bin/frank.js"
+  },
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "meow": "~3.7.0"
+    "cac": "~4.2.4"
   },
   "xo": {
     "semicolon": false
