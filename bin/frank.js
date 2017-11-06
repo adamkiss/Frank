@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 let Frank = false
 
-function run(){
+function run(i, flags){
 	// try local, pinned frank first
 	let frankPath = path.join(process.cwd(), 'node_modules', 'frank');
 	try {
@@ -15,10 +15,14 @@ function run(){
 	}
 
 	if (!Frank){
-		Frank = require(frankPath)
+		Frank = require(frankPath)(process.cwd())
 	}
 
-	Frank.start()
+	if (i.length){
+		Frank.start(i[0])
+	} else {
+		Frank.start()
+	}
 }
 
 const cli = require('cac')();
