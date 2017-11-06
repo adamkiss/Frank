@@ -1,0 +1,11 @@
+{
+  "name": "Frank",
+  "description": "Static Site Generator that prefers to live globally",
+  "website": "https://github.com/adamkiss/Frank",
+  "version": "0.0.0",
+  "author": "Adam Kiss",
+  "repository": "adamkiss/Frank",
+  "main": "lib",
+  "license": "MIT",
+  "private": false
+}
