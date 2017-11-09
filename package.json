@@ -3,7 +3,7 @@
   "description": "Static Site Generator that prefers to live globally",
   "website": "https://github.com/adamkiss/Frank",
   "version": "0.0.2",
-  "author": "Adam Kiss",
+  "author": "adamkiss <iamadamkiss+npm@gmail.com> (https://adamkiss.com)",
   "repository": "adamkiss/Frank",
   "main": "index.js",
   "bin": {
