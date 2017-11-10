@@ -3,7 +3,7 @@
 
 const fs = require('fs')
 const path = require('path')
-let Frank = false
+let Frank, frank
 
 function run(i, flags){
 	// try local, pinned frank first
@@ -15,13 +15,14 @@ function run(i, flags){
 	}
 
 	if (!Frank){
-		Frank = require(frankPath)(process.cwd())
+		Frank = require(frankPath)
 	}
 
+	frank = new Frank(process.cwd())
 	if (i.length){
-		Frank.start(i[0])
+		frank.start(i[0])
 	} else {
-		Frank.start()
+		frank.start()
 	}
 }
 
