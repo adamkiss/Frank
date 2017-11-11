@@ -3,27 +3,29 @@
 
 const fs = require('fs')
 const path = require('path')
-let Frank, frank
 
-function run(i, flags){
-	// try local, pinned frank first
+let Frank
+let frank
+
+function run(i, flags) {
+	// Try local, pinned frank first
 	let frankPath = path.join(process.cwd(), 'node_modules', 'frank');
 	try {
 		fs.accessSync(frankPath)
-	} catch (_) {
+	} catch (err) {
 		frankPath = '..'
 	}
 
-	if (!Frank){
-		Frank = require(frankPath)
-	}
-
+	Frank = require(frankPath)
 	frank = new Frank(process.cwd())
-	if (i.length){
+
+	if (i.length > 0) {
 		frank.start(i[0])
 	} else {
 		frank.start()
 	}
+
+	return flags
 }
 
 const cli = require('cac')();
@@ -38,8 +40,8 @@ cli.command('task', {
 cli.command('*', ':)', () => cli.showHelp())
 
 cli.on('error', err => {
-  console.error('command failed:', err)
-  process.exit(1)
+	console.error('command failed:', err)
+	process.exit(1)
 })
 
 cli.parse()

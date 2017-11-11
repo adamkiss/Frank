@@ -16,7 +16,13 @@
     "cac": "~4.2.4",
     "taskr": "~1.1.0"
   },
+  "devDependencies": {
+    "xo": "~0.18.2"
+  },
   "xo": {
-    "semicolon": false
+    "rules": {
+      "semi": 0,
+      "camelcase": 0
+    }
   }
 }

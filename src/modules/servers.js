@@ -18,4 +18,7 @@ setTimeout(() => {
 	caddy.kill()
 }, 50000)
 
-module.exports = {}
+module.exports = (Frank, args) => {
+
+	return Frank
+}

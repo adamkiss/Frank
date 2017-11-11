@@ -1,4 +1,4 @@
-const {hello, hallo} = require('./_dev.js')
+const {hello} = require('./_dev.js')
 
 module.exports = {
 	plugins: [
