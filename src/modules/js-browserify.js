@@ -1,10 +1,24 @@
-const {hallo} = require('./_dev.js')
+module.exports = frank => {
+	frank.add_plugins([
+		require('@taskr/browserify'),
+		require('@taskr/uglify')
+	])
 
-module.exports = {
-	plugins: [require('@taskr/sass'), hallo],
-	tasks: {
-		* default (task) {
-			console.log('default')
+	frank.add_tasks({
+		* js_compile(task) {
+			yield task
+				.source('assets/js/*.js')
+				.browserify()
+				.target('./public/assets')
+		},
+		* js_build(task) {
+			yield task
+				.source('assets/js/*.js')
+				.browserify()
+				.uglify()
+				.target('./public/assets')
 		}
-	}
+	})
+
+	return frank
 }
