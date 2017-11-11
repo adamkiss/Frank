@@ -15,7 +15,11 @@
     "@taskr/browserify": "^1.1.0",
     "@taskr/clear": "^1.1.0",
     "@taskr/sass": "~1.1.0",
+    "@taskr/uglify": "^1.1.0",
     "cac": "~4.2.4",
+    "gray-matter": "^3.1.1",
+    "js-yaml": "^3.10.0",
+    "papaparse": "^4.3.6",
     "taskr": "~1.1.0",
     "taskr-autoprefixer": "^1.0.0"
   },
