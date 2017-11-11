@@ -29,7 +29,6 @@ module.exports = class Frank {
 	}
 
 	start() {
-		console.log(this)
 		this.taskr = new Taskr({
 			plugins: this.plugins,
 			tasks: this.tasks,

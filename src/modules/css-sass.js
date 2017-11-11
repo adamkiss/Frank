@@ -1,5 +1,3 @@
-const {hello, hallo} = require('./_dev.js')
-
 function opts_to_config(opts) {
 	return {
 		sourceMapEmbed: !opts.minify,
@@ -8,19 +6,15 @@ function opts_to_config(opts) {
 }
 
 module.exports = (frank, opts) => {
-	console.log(opts)
-
 	frank.add_plugins([
-		require('@taskr/sass'), hello, hallo
+		require('@taskr/sass')
 	])
 	frank.add_tasks({
 		* sass(task) {
 			yield task
-				.source('sass/halo.sass')
-				.hello()
+				.source('assets/css/style.scss')
 				.sass(opts_to_config(opts))
-				.hallo()
-				.target('./dist')
+				.target('./public/assets')
 		}
 	})
 

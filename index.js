@@ -7,5 +7,7 @@ module.exports = (cwd, opts) => {
 
 	frank.add_module('css-sass')
 
+	frank.add_module('clear')
+
 	return frank
 }
