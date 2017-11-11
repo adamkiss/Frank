@@ -12,9 +12,12 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@taskr/browserify": "^1.1.0",
+    "@taskr/clear": "^1.1.0",
     "@taskr/sass": "~1.1.0",
     "cac": "~4.2.4",
-    "taskr": "~1.1.0"
+    "taskr": "~1.1.0",
+    "taskr-autoprefixer": "^1.0.0"
   },
   "devDependencies": {
     "xo": "~0.18.2"
