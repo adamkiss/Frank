@@ -9,11 +9,13 @@ module.exports = class Frank {
 
 		this.plugins = []
 		this.tasks = {}
-
-		this.setup()
 	}
 
-	add_plugin(p) {
+	add_module(module) {
+		require(`./modules/${module}`)(this, this.opts[module] || {})
+	}
+
+	add_plugins(p) {
 		this.plugins = p.reduce((acc, cur) => {
 			if (acc.indexOf(cur) === -1) {
 				acc.push(cur)
@@ -27,6 +29,7 @@ module.exports = class Frank {
 	}
 
 	start() {
+		console.log(this)
 		this.taskr = new Taskr({
 			plugins: this.plugins,
 			tasks: this.tasks,
@@ -35,14 +38,3 @@ module.exports = class Frank {
 		return this.taskr.start(...arguments)
 	}
 }
-/*
-	foreach (tasks) {
-		require('./task')(Frank, opts)
-	}
- */
-
-// function frank(cwd){
-// 	return Frank
-// }
-
-// module.exports = frank

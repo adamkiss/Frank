@@ -1,22 +1,28 @@
-const {hello} = require('./_dev.js')
+const {hello, hallo} = require('./_dev.js')
 
-module.exports = {
-	plugins: [
-		require('@taskr/sass'), hello
-	],
-	tasks: {
-		* fakesass (task) {
-			task
+function opts_to_config(opts) {
+	return {
+		sourceMapEmbed: !opts.minify,
+		outputStyle: opts.minify ? 'compressed' : 'expanded'
+	}
+}
+
+module.exports = (frank, opts) => {
+	console.log(opts)
+
+	frank.add_plugins([
+		require('@taskr/sass'), hello, hallo
+	])
+	frank.add_tasks({
+		* sass(task) {
+			yield task
 				.source('sass/halo.sass')
 				.hello()
-				.sass({
-					sourceMapEmbed: true,
-					// importer: function(url, prev, done){
-					// 	console.log(url, prev, done)
-					// }
-				})
+				.sass(opts_to_config(opts))
 				.hallo()
 				.target('./dist')
 		}
-	}
+	})
+
+	return frank
 }

@@ -4,7 +4,7 @@
 const fs = require('fs')
 const path = require('path')
 
-let Frank
+let createFrank
 let frank
 
 function run(i, flags) {
@@ -16,8 +16,8 @@ function run(i, flags) {
 		frankPath = '..'
 	}
 
-	Frank = require(frankPath)
-	frank = new Frank(process.cwd())
+	createFrank = require(frankPath)
+	frank = createFrank(process.cwd(), {'css-sass': {minify: true}})
 
 	if (i.length > 0) {
 		frank.start(i[0])
