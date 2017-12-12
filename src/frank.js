@@ -7,7 +7,7 @@ module.exports = class Frank {
 		this.cwd = cwd
 		this.opts = opts
 
-		this.plugins = []
+		this.plugins = new Map()
 		this.tasks = {}
 	}
 
