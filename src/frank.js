@@ -1,13 +1,14 @@
 'use strict'
 
 const Taskr = require('taskr')
+const reporter = require('taskr/lib/reporter')
 
 module.exports = class Frank {
 	constructor(cwd, opts = {}) {
 		this.cwd = cwd
 		this.opts = opts
 
-		this.plugins = new Map()
+		this.plugins = new Set()
 		this.tasks = {}
 	}
 
@@ -30,10 +31,11 @@ module.exports = class Frank {
 
 	start() {
 		this.taskr = new Taskr({
-			plugins: this.plugins,
+			plugins: Array.from(this.plugins),
 			tasks: this.tasks,
 			cwd: this.cwd
 		})
+		this.reporter = reporter.call(this.taskr)
 		return this.taskr.start(...arguments)
 	}
 }
