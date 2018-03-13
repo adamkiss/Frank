@@ -7,14 +7,16 @@ module.exports = (cwd, opts) => {
 
 	frank.env = {minify: false}
 
+	require('./smith-src/pretty-error')(frank)
 	require('./smith-src/serve')(frank)
 	require('./smith-src/styles')(frank)
 	require('./smith-src/scripts')(frank)
+	require('./smith-src/metalsmith')(frank)
 
 	frank.tasks.build = function * (task) {
 		yield task.parallel([
-			'scripts:serve', 'styles'
-		])
+			'scripts:serve', 'scripts:vendor', 'styles'
+		]).start('metalsmith')
 	}
 	/*
 	// frank.add_module('css-sass')

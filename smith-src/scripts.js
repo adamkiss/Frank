@@ -14,4 +14,9 @@ module.exports = frank => {
 			.uglify()
 			.target('public/assets')
 	}
+
+	frank.tasks['scripts:vendor'] = function * (task) {
+		yield task.source('source/assets/scripts/vendor/**')
+			.target('public/assets/vendor')
+	}
 }

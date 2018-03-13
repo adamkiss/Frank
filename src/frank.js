@@ -1,5 +1,7 @@
 'use strict'
 
+const path = require('path')
+
 const Taskr = require('taskr')
 const reporter = require('taskr/lib/reporter')
 
@@ -10,6 +12,8 @@ module.exports = class Frank {
 
 		this.plugins = new Set()
 		this.tasks = {}
+
+		this.config = require(path.join(this.cwd, 'frank.site.js'))
 	}
 
 	add_module(module) {

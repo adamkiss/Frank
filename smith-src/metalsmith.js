@@ -1,59 +1,69 @@
-const _ = require('lodash')
-const MS = require('metalsmith')
-let msp = require('load-metalsmith-plugins')()
-msp = require('./metalsmith-plugins')()
+const metalsmith = require('metalsmith')
 
-module.exports = (g, gp, cfg)->
+module.exports = frank => {
+	const _ = require('lodash')
+	const jadeHelpers = require('./jade-helpers')(frank)
 
-  _   = require 'lodash'
-  MS  = require 'metalsmith'
-  msp = require('load-metalsmith-plugins')()
-  msp = require('./metalsmith-plugins')(g, gp, MS, msp, cfg)
+	require('./metalsmith-plugins')(frank)
 
-  jadeHelpers = require('./jade-helpers')({g: g, gp: gp, ms: MS, msp: msp, cfg: cfg})
+	const config = {
+		ignore: ['.DS_Store'],
+		inPlace: {
+			engine: 'jade',
+			cache: false,
+			pattern: '**/*.jade*'
+		}
+	}
 
-  renameMap = [
-    [/\.php\.jade$/, '.php'],
-    [/\.jade$/     , '.html']
-  ]
+	const renameMap = [
+		[/\.php\.jade$/, '.php'],
+		[/\.jade$/, '.html']
+	]
 
-  Metalsmith: (opts, callback)->
-    cfg.metalsmith = msp.readDataFiles 'source/data/*.*'
-    cfg.runtime = {
-      build: opts.build || false
-      assets: cfg.metalsmith.metadata['assets-manifest']
-    }
-    cfg.metalsmith.metadata.env =
-      build: cfg.runtime.build
+	const runMetalsmith = (opts, callback) => {
+		frank.config.metalsmith = frank.msp.readDataFiles('source/data/*.*')
+		frank.config.metalsmith.metadata.env = {
+			build: opts.build || false,
+			assets: frank.config.metalsmith.metadata['assets-manifest']
+		}
+		metalsmith(frank.cwd)
+			.source('source/site')
+			.destination('public')
+			.clean(false)
+			.frontmatter(false)
+			.use(frank.msp.matters())
+			.use(frank.msp.ignore(config.ignore))
+			.use(frank.msp.virtualPages(frank.config.metalsmith.generators))
+			.use(frank.msp.define(frank.config.metalsmith.metadata))
+			.use(frank.msp.metaPath())
+			.use(frank.msp.permalinks())
+			.use(frank.msp.collections(frank.config.collections))
+			.use(frank.msp.inPlace(_.extend(config.inPlace, jadeHelpers)))
+			.use(frank.msp.rename(renameMap))
+			.build(error => {
+				if (error) {
+					console.error(
+						error.message.substr(error.message.lastIndexOf('\n') + 1)
+					)
+					callback(error)
+				} else {
+					callback()
+				}
+			})
+	}
+	const runMetalsmithPromise = opts => new Promise((resolve, reject) => {
+		runMetalsmith(opts, (error = false) => {
+			return error ? reject(error) : resolve(':)')
+		})
+	})
 
-    MS cfg.site.path()
-      .source      'source/site'
-      .destination 'public'
-      .clean        false
-      .frontmatter  false
-
-      .use msp.matters()
-      .use msp.ignore(cfg.mp.ignore)
-      .use msp.virtualPages(cfg.metalsmith.generators)
-      .use msp.define(cfg.metalsmith.metadata)
-      .use msp.metaPath()
-      .use msp.permalinks()
-      .use msp.collections(cfg.fs.collections)
-      .use msp.inPlace(_.extend(cfg.mp.inPlace, jadeHelpers))
-      .use msp.rename(renameMap)
-
-      .build (error)->
-        if (error)
-          gp.notifier.notify {
-            title: '❌ Error: METALSMITH'
-            message: error.message.substr error.message.lastIndexOf("\n")+1
-          }
-          callback(error)
-        else
-          gp.browserSync.reload()
-          callback()
-
-
-modules.exports = (frank) => {
-
+	frank.plugins.add(require('@taskr/clear'))
+	frank.tasks.metalsmith = function * (task) {
+		yield task.clear('public').run({
+			every: false,
+			* func() {
+				yield runMetalsmithPromise({})
+			}
+		})
+	}
 }

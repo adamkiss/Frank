@@ -1,13 +1,22 @@
-const _ = 'lodash'
-const fs = 'fs'
-const glob = 'glob'
-const mm = 'mm'
-const path = 'path'
-const matter = 'gray-matter'
-const marked = 'marked'
+const fs = require('fs')
+const path = require('path')
+const _ = require('lodash')
+const glob = require('glob')
+const mm = require('multimatch')
+const matter = require('gray-matter')
 
-module.exports = (ms, msp, cfg) => {
-	msp.metaPath = function () {
+module.exports = frank => {
+	frank.msp = {
+		collections: require('metalsmith-collections'),
+		define: require('metalsmith-define'),
+		ignore: require('metalsmith-ignore'),
+		inPlace: require('metalsmith-in-place'),
+		matters: require('metalsmith-matters'),
+		rename: require('metalsmith-rename'),
+		virtualPages: require('metalsmith-virtual-pages')
+	}
+
+	frank.msp.metaPath = function () {
 		const pathParsePlus = name => {
 			const parsed = path.parse(name)
 
@@ -21,7 +30,7 @@ module.exports = (ms, msp, cfg) => {
 		}
 
 		const isJade = parsed => parsed.ext === '.jade'
-		const jadeFilename = parsed => cfg.site.path(`source/${parsed.base}`)
+		const jadeFilename = parsed => path.join(frank.cwd, `source/${parsed.base}`)
 
 		const process = name => {
 			const parsed = pathParsePlus(name)
@@ -33,34 +42,35 @@ module.exports = (ms, msp, cfg) => {
 		}
 
 		return (files, metalsmith, done) => {
-			files.forEach((file, name) => {
-				_.merge(file, process(name))
+			Object.keys(files).forEach(name => {
+				_.merge(files[name], process(name))
 			})
 			done()
 		}
 	}
 
-	msp.permalinks = () => {
+	frank.msp.permalinks = () => {
 		const match = '**/*.{php,htm?(l),jade,php.jade}'
 
 		const indexedName = (name, pathInfo) => {
 			const pathParts = name.split('.')
 			pathParts.shift()
 			pathInfo.ext_ = `.${pathParts.join('.')}`
-			return path.join(pathInfo.dir, pathInfo.name, 'index', pathInfo.ext_)
+			return path.join(pathInfo.dir, pathInfo.name, `index${pathInfo.ext_}`)
 		}
 
 		const setUrl = filePath => `/${filePath}`
 
 		const setPermalink = filePath => {
-			pathParts = filePath.split('/')
-			pathParts.splice(-1,1)
+			const pathParts = filePath.split('/')
+			pathParts.splice(-1, 1)
 			return path.normalize(`/${pathParts.join('/')}/`)
 		}
 
 		return (files, metalsmith, done) => {
 			const matched = mm(Object.keys(files), match)
-			files.forEach((file, name) => {
+			Object.keys(files).forEach(name => {
+				const file = files[name]
 				const skipPermalink = matched.indexOf(name) === -1 || Boolean(file.permalink)
 
 				if (!skipPermalink || file.pathInfo.name !== 'index') {
@@ -81,10 +91,10 @@ module.exports = (ms, msp, cfg) => {
 		}
 	}
 
-	msp.readDataFiles = relativePath => {
+	frank.msp.readDataFiles = relativePath => {
 		const returnData = {generators: [], metadata: {}}
 
-		glob.sync(cfg.site.path(relativePath)).forEach(file => {
+		glob.sync(path.join(frank.cwd, relativePath)).forEach(file => {
 			const fileParts = path.parse(file).name.split('_')
 			const fileData = matter(`---\n${fs.readFileSync(file)}`).data
 
@@ -97,7 +107,5 @@ module.exports = (ms, msp, cfg) => {
 
 		return returnData
 	}
-
-	return msp
 }
 
