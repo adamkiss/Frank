@@ -30,6 +30,6 @@ module.exports = frank => {
 			console.log(`Caddy Server ended with code ${code}`)
 		})
 
-		return true
+		yield task
 	}
 }
